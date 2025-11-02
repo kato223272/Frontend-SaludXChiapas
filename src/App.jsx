@@ -4,9 +4,9 @@ import Login from './pages/Login';
 function App() {
   return (
     <div>
-      <div className="container mt-4">
+      <div className="">
         <Routes>
-          {/* <Route path="/" element={<Login />} /> */}
+          <Route path="/" element={<Login />} />
         </Routes>
       </div>
     </div>
