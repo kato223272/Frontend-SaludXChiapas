@@ -1,21 +1,22 @@
 .fondo-login-derecha {
-    background-color: #EEFFF8;
+    background-color: var(--color-verde_letra);
 }
 
 .color-principal-letra {
-    color: #0D4E33;
+    color: var(--color-verde_subtitulo);
 }
 
-.color-principal-letra-login {
-    color: #166645;
+.color-letra-form {
+    color: var(--color-verde_boton);
 }
 
 .boton-login {
     background-color: var(--color-verde_letra);
-    border-radius: 3vh;
+    border-radius: 2vh;
     border: #C2C2C2;
     padding: 1vh;
     box-shadow: 1px 1px 5px gray;
+    color: var(--white);
     
 }
 
