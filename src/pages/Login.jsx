@@ -6,10 +6,10 @@ function Home() {
     <div className="container-fluid">
       <div className="row">
         <div className="col-12 col-md vh-100 bg-white text-white text-center justify-content-center align-item-center">
-          <div className="d-flex justify-content-end color-principal-letra p-3">
-            <h3 className="m-0">SaludxChiapas</h3>
+          <div className="d-flex justify-content-start color-principal-letra p-3">
+            <h5 className="m-0 fw-bold">SaludxChiapas</h5>
           </div>
-          <h2 className="color-principal-letra">¡Bienvenido!</h2>
+          <h4 className="color-principal-letra">¡Bienvenido!</h4>
           <FormularioLogin />
         </div>
         <div className="col-12 col-md vh-100 fondo-login-derecha text-white text-center"></div>
