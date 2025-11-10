@@ -1,9 +1,10 @@
 :root{
   --white: #FFFFFF;
   --color-verde_fondo: #EEFFF8;
-  --color-verde_letra: #057C82;
   --color-verde_boton: #166645;
   --color-verde_subtitulo: #0D4E33;
+  --color-turquesa-claro:#057C82;
+  --color-turquesa-oscuro:#005054;
 
   --color-gris_claro: #f2f2f2;
   --color-gris_oscuro: #8d8d8d;

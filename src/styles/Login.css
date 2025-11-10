@@ -1,9 +1,29 @@
 .fondo-login-derecha {
-    background-color: var(--color-verde_letra);
+    background-color: var(--color-turquesa-claro); 
+}
+.divpadre {
+  position: relative;
+  overflow: hidden;
 }
 
+.divpadre::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-image: url("../assets/img/Fondo_Login.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(5px);
+  transform: scale(1);
+}
+
+
 .color-principal-letra {
-    color: var(--color-verde_subtitulo);
+    color: var(--white);
 }
 
 .color-letra-form {
@@ -11,7 +31,7 @@
 }
 
 .boton-login {
-    background-color: var(--color-verde_letra);
+    background-color: var(--color-turquesa-claro);
     border-radius: 2vh;
     border: #C2C2C2;
     padding: 1vh;
