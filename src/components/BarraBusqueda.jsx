@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch } from 'react-icons/fa'; // Importar ícono
+import { FaSearch } from 'react-icons/fa'; 
 import '../styles/BarraBusqueda.css';
 
 const BarraBusqueda = ({ placeholder, value, onChange }) => {

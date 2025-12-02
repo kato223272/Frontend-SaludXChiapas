@@ -1,7 +1,6 @@
 import FormularioLogin from "../components/Formulario-login";
 import "./../styles/Login.css";
 import { Row } from "react-bootstrap";
-import Logo from "../../public/favicon.ico";
 
 function Home() {
   return (
@@ -19,11 +18,11 @@ function Home() {
         </div>
         <div className="col-12 col-md vh-100 fondo-login-derecha text-white text-center justify-content-center align-item-center d-flex flex-column">
           <img 
-         src={Logo} 
-         alt="Logo" 
-         className="img-fluid" 
-         style={{marginLeft:"25%", maxWidth: '50%', height: 'auto' }} 
-        />
+            src="/favicon.ico" 
+            alt="Logo" 
+            className="img-fluid" 
+            style={{marginLeft:"25%", maxWidth: '50%', height: 'auto' }} 
+          />
         </div>
       </Row>
     </div>

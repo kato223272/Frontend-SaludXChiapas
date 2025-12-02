@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import GestionTerminos from './pages/GestionTerminos';
+import GestionTerminos from './pages/GestionEnfermedades';
 
 function App() {
 
