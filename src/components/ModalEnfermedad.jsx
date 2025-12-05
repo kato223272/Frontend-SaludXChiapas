@@ -94,6 +94,7 @@ const ModalEnfermedad = ({ enfermedad, onClose, onGuardar }) => {
             >
               <option value="Bajo">Bajo</option>
               <option value="Medio">Medio</option>
+              <option value="Medio-Alto">Medio-Alto</option>
               <option value="Alto">Alto</option>
             </select>
           </div>

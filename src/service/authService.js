@@ -1,11 +1,19 @@
-const AUTH_URL = import.meta.env.VITE_API_AUTH_URL; // https://isai.wildroid.space/api/auth
+const AUTH_URL = import.meta.env.VITE_API_URL_AUTH_ADMIN; 
 
 export const loginUser = async (identifier, password) => {
   try {
-    const response = await fetch(`${AUTH_URL}/login`, {
+
+    const baseUrl = AUTH_URL.endsWith('/') ? AUTH_URL.slice(0, -1) : AUTH_URL;
+    
+    const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier, password }) 
+
+      body: JSON.stringify({ 
+          username: identifier, 
+          identifier: identifier, 
+          password 
+      }) 
     });
 
     const data = await response.json();
@@ -22,7 +30,7 @@ export const loginUser = async (identifier, password) => {
 
     return data;
   } catch (error) {
-    console.error(error);
+    console.error("Error en login:", error);
     throw error;
   }
 };

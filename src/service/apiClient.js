@@ -12,7 +12,7 @@ export const authFetch = async (endpoint, options = {}) => {
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`; // <--- AQUÍ ESTÁ LA MAGIA
+    headers['Authorization'] = `Bearer ${token}`; 
   }
 
   const config = {

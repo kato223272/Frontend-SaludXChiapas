@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTrash, FaStethoscope, FaPlus, FaArrowLeft } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaStethoscope, FaPlus, FaArrowLeft, FaExclamationTriangle } from 'react-icons/fa';
 import * as api from '../service/apiAdmin';
 
 import ModalEnfermedad from '../components/ModalEnfermedad';
@@ -13,25 +13,21 @@ const GestionEnfermedades = () => {
   const navigate = useNavigate();
   const [enfermedades, setEnfermedades] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Control de Modales
+  
   const [modalEnfermedadOpen, setModalEnfermedadOpen] = useState(false);
   const [modalSintomasOpen, setModalSintomasOpen] = useState(false);
   const [modalSinonimosOpen, setModalSinonimosOpen] = useState(false);
-
-  // Datos seleccionados
+  
   const [enfermedadSeleccionada, setEnfermedadSeleccionada] = useState(null);
   const [sintomaSeleccionado, setSintomaSeleccionado] = useState(null);
 
-  // 1. CARGA INICIAL (GET desde Render)
   const cargarDatos = async () => {
     try {
       setLoading(true);
       const data = await api.getEnfermedades();
       setEnfermedades(data);
     } catch (error) {
-      console.error(error);
-      alert("No se pudo conectar con el servidor en Render.");
+      console.error("Error al cargar datos:", error); // Usamos la variable error
     } finally {
       setLoading(false);
     }
@@ -41,70 +37,63 @@ const GestionEnfermedades = () => {
     cargarDatos();
   }, []);
 
-  // --- HANDLERS NIVEL 1: ENFERMEDAD ---
-
-const handleCrearEnfermedad = async (formData) => {
+  const handleCrearEnfermedad = async (formData) => {
     try {
         const nuevaEnf = {
             nombre: formData.nombre,
             nivel_urgencia: formData.nivel_urgencia,
             recomendacion_publica: formData.recomendacion_publica,
             sintomas_clave: formData.sintomas_clave, 
-            
             sintomatologia: []
         };
-        
         await api.crearEnfermedad(nuevaEnf);
         setModalEnfermedadOpen(false);
         cargarDatos(); 
     } catch (e) { 
-        console.error(e);
-        alert("Error al crear la enfermedad. Revisa que no exista ya ese nombre."); 
+        console.error("Error al crear:", e); // CORREGIDO: Se usa 'e'
+        alert("Error al crear el registro."); 
     }
   };
 
- const handleEditarEnfermedad = async (formData) => {
+  const handleEditarEnfermedad = async (formData) => {
     try {
         await api.editarEnfermedad({
             nombre_actual: enfermedadSeleccionada.nombre,
-
             nuevo_nombre: formData.nombre,
             nueva_urgencia: formData.nivel_urgencia,
             nueva_recomendacion: formData.recomendacion_publica,
-            
             nuevos_sintomas_clave: formData.sintomas_clave 
         });
-        
         setModalEnfermedadOpen(false);
         cargarDatos();
     } catch (e) { 
-        console.error(e);
-        alert("Error al editar la información."); 
+        console.error("Error al editar:", e); // CORREGIDO: Se usa 'e'
+        alert("Error al actualizar el registro."); 
     }
   };
 
-const handleEliminarEnfermedad = async (nombre) => {
-    if(window.confirm(`¿Estás seguro de eliminar "${nombre}"?\n\nSe perderán todos sus síntomas y sinónimos para siempre.`)) {
+  const handleEliminarEnfermedad = async (nombre) => {
+    if(window.confirm(`¿Confirmar eliminación del protocolo para "${nombre}"?`)) {
         try {
             await api.eliminarEnfermedad(nombre);
             cargarDatos(); 
         } catch (e) { 
-            console.error(e);
-            alert("Error al eliminar la enfermedad."); 
+            console.error("Error al eliminar:", e); // CORREGIDO: Se usa 'e'
+            alert("Error al eliminar."); 
         }
     }
   };
 
-  // --- HANDLERS NIVEL 2: SÍNTOMAS ---
-
   const handleAgregarSintoma = async (nombreEnf, nombreSintoma) => {
     try {
         await api.agregarSintoma(nombreEnf, { nombre: nombreSintoma, otros_nombres: [] });
-        // Recargamos datos globales y actualizamos la selección local
         const data = await api.getEnfermedades();
         setEnfermedades(data);
         setEnfermedadSeleccionada(data.find(e => e.nombre === nombreEnf));
-    } catch (e) { alert("Error al agregar síntoma"); }
+    } catch (e) { 
+        console.error(e); // CORREGIDO: Se usa 'e'
+        alert("Error de operación"); 
+    }
   };
 
   const handleEliminarSintoma = async (nombreEnf, nombreSintoma) => {
@@ -113,88 +102,109 @@ const handleEliminarEnfermedad = async (nombre) => {
         const data = await api.getEnfermedades();
         setEnfermedades(data);
         setEnfermedadSeleccionada(data.find(e => e.nombre === nombreEnf));
-    } catch (e) { alert("Error al eliminar síntoma"); }
+    } catch (e) { 
+        console.error(e); // CORREGIDO: Se usa 'e'
+        alert("Error de operación"); 
+    }
   };
-
-  // --- HANDLERS NIVEL 3: SINÓNIMOS ---
   
   const handleCRUD_Sinonimo = async (accion, ...args) => {
-    // Lógica para preparar los datos antes de enviar a la API
     let nuevosSinonimos = [...sintomaSeleccionado.otros_nombres];
     const sintomaNombre = sintomaSeleccionado.nombre;
     const enfermedadNombre = enfermedadSeleccionada.nombre;
 
-    // Modificamos el array localmente primero
     if (accion === 'agregar') nuevosSinonimos.push(args[1]);
     if (accion === 'eliminar') nuevosSinonimos = nuevosSinonimos.filter(s => s !== args[1]);
     if (accion === 'editar') nuevosSinonimos = nuevosSinonimos.map(s => s === args[1] ? args[2] : s);
 
     try {
-        // Enviamos el array completo actualizado a Render
         await api.editarSintoma(enfermedadNombre, sintomaNombre, null, nuevosSinonimos);
-        
-        // Refrescamos la UI
         const data = await api.getEnfermedades();
         setEnfermedades(data);
         
-        // Mantenemos los modales abiertos con datos frescos
         const enfActualizada = data.find(e => e.nombre === enfermedadNombre);
         setEnfermedadSeleccionada(enfActualizada);
         setSintomaSeleccionado(enfActualizada.sintomatologia.find(s => s.nombre === sintomaNombre));
-    } catch (e) { alert("Error actualizando sinónimos"); }
+    } catch (e) { 
+        console.error(e); // CORREGIDO: Se usa 'e'
+        alert("Error actualizando base de conocimientos"); 
+    }
   };
 
-  if (loading) return <div className="text-center mt-5"><h3>Cargando Panel de Administración...</h3></div>;
+  const getUrgencyClass = (nivel) => {
+      if (nivel === 'Alto' || nivel === 'Medio-Alto') return 'urgency-high';
+      if (nivel === 'Medio') return 'urgency-medium';
+      return 'urgency-low';
+  };
+
+if (loading) return (
+    <div className="loading-wrapper">
+        <div className="scanner-container">
+            <div className="scanner-ring"></div>
+            <div className="scanner-core"></div>
+        </div>
+        <div className="loading-text">Accediendo a Protocolos</div>
+        <div className="loading-subtext">Verificando base de datos médica...</div>
+    </div>
+  );
 
   return (
-    <div className="container-fluid p-4">
-      <header className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <button onClick={() => navigate('/')} className="btn btn-outline-secondary me-3"><FaArrowLeft /> Volver</button>
-            <h2 className="d-inline">Gestión de Enfermedades</h2>
+    <div className="gestion-page">
+      <header className="gestion-header">
+        <div className="header-left">
+            <button onClick={() => navigate('/graficas')} className="btn-back">
+                <FaArrowLeft /> Regresar
+            </button>
+            <div className="header-titles">
+                <h1>Base de Conocimientos Médicos</h1>
+                <p>Administración de patologías y sintomatología</p>
+            </div>
         </div>
-        <button className="btn btn-primary" onClick={() => { setEnfermedadSeleccionada(null); setModalEnfermedadOpen(true); }}>
-            <FaPlus /> Nueva Enfermedad
+        <button className="btn-create" onClick={() => { setEnfermedadSeleccionada(null); setModalEnfermedadOpen(true); }}>
+            <FaPlus /> Nueva enfermedad
         </button>
       </header>
 
-      {/* GRID DE TARJETAS */}
-      <div className="row">
-        {enfermedades.map((enf) => (
-          <div key={enf._id || enf.nombre} className="col-md-6 col-lg-4 mb-4">
-            <div className="card h-100 shadow-sm">
-              <div className={`card-header text-white d-flex justify-content-between align-items-center ${
-                  enf.nivel_urgencia === 'Alto' ? 'bg-danger' : 
-                  enf.nivel_urgencia === 'Medio' ? 'bg-warning text-dark' : 'bg-success'
-              }`}>
-                <h5 className="m-0 fw-bold">{enf.nombre}</h5>
-                <small>{enf.nivel_urgencia}</small>
+      <div className="gestion-content">
+        <div className="cards-grid">
+          {enfermedades.map((enf) => (
+            <div key={enf._id || enf.nombre} className={`medical-card ${getUrgencyClass(enf.nivel_urgencia)}`}>
+              <div className="card-top">
+                <div className="card-titles">
+                    <h3>{enf.nombre}</h3>
+                    <span className="urgency-badge">
+                        {enf.nivel_urgencia === 'Alto' && <FaExclamationTriangle />} 
+                        {enf.nivel_urgencia}
+                    </span>
+                </div>
               </div>
               
-              <div className="card-body">
-                <p className="small text-muted">{enf.recomendacion_publica.substring(0, 120)}...</p>
+              <div className="card-body-text">
+                <p>{enf.recomendacion_publica}</p>
+              </div>
+
+              <div className="card-actions">
                 <button 
-                    className="btn btn-outline-primary w-100" 
+                    className="btn-symptoms" 
                     onClick={() => { setEnfermedadSeleccionada(enf); setModalSintomasOpen(true); }}
                 >
-                    <FaStethoscope /> Gestionar Síntomas ({enf.sintomatologia?.length || 0})
+                    <FaStethoscope /> {enf.sintomatologia?.length || 0} Síntomas Registrados
                 </button>
-              </div>
-
-              <div className="card-footer bg-white d-flex justify-content-end gap-2">
-                <button className="btn btn-sm btn-outline-secondary" onClick={() => { setEnfermedadSeleccionada(enf); setModalEnfermedadOpen(true); }}>
-                    <FaEdit /> Editar Info
-                </button>
-                <button className="btn btn-sm btn-outline-danger" onClick={() => handleEliminarEnfermedad(enf.nombre)}>
-                    <FaTrash />
-                </button>
+                
+                <div className="action-row">
+                    <button className="btn-icon-edit" onClick={() => { setEnfermedadSeleccionada(enf); setModalEnfermedadOpen(true); }}>
+                        <FaEdit /> Editar
+                    </button>
+                    <button className="btn-icon-delete" onClick={() => handleEliminarEnfermedad(enf.nombre)}>
+                        <FaTrash />
+                    </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* --- MODALES --- */}
       {modalEnfermedadOpen && (
         <ModalEnfermedad 
             enfermedad={enfermedadSeleccionada}

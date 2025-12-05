@@ -13,4 +13,32 @@
   --color-rojo_oscuro: #713a3b;
   --color-amarillo_claro: #fffbdf;
   --color-amarillo_oscuro: #6d6000;
+
+  --bg-app: #f1f5f9;      
+  --surface: #ffffff;    
+
+  --text-primary: #334155;  
+  --text-secondary: #64748b;
+  --border-subtle: #e2e8f0;  
+ 
+  --medical-primary: #0f766e; 
+  --medical-hover: #115e59; 
+  --risk-high: #dc2626;
+  --risk-med: #ea580c;
+  --risk-low: #ca8a04;
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --med-bg: #f1f5f9;
+  --med-surface: #ffffff;
+  --med-primary: #0f766e;
+  --med-primary-dark: #115e59;
+  --med-text-main: #1e293b;
+  --med-text-muted: #64748b;
+  --med-border: #e2e8f0;
+  
+  --urgency-high: #dc2626;
+  --urgency-med: #f59e0b;
+  --urgency-low: #10b981;
 }
