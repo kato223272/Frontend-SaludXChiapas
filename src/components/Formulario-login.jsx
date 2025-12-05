@@ -76,7 +76,7 @@ const FormularioLogin = () => {
               value={usuarioInput}
               onChange={(e) => setUsuarioInput(e.target.value)}
               required
-              placeholder="Ej: admin o admin@ejemplo.com"
+              placeholder=" "
             />
           </div>
 
