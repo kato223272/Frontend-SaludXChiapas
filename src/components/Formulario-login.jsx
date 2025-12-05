@@ -66,7 +66,7 @@ const FormularioLogin = () => {
         <form onSubmit={handleSubmit}>
           <div className="mb-3 color-letra-form text-start">
             <label htmlFor="usuario" className="form-label fw-semibold d-block">
-              Usuario o Correo Electrónico
+              Usuario
             </label>
 
             <input

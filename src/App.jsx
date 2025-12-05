@@ -11,17 +11,17 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/graficas"
             element={
-              <PrivateRoute>
+              // <PrivateRoute>
                 <Grafica />
-              </PrivateRoute>
+              // </PrivateRoute>
             } 
           />
           <Route 
             path="/GestionTerminos" 
             element={
-              <PrivateRoute>
+              // <PrivateRoute>
                 <GestionTerminos />
-              </PrivateRoute>
+              // </PrivateRoute>
             } 
           />
         </Routes>
