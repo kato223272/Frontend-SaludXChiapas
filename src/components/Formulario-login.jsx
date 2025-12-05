@@ -9,7 +9,7 @@ const FormularioLogin = () => {
 
   const navigate = useNavigate();
   
-  // Usamos la variable de entorno que apunta a tu IP (http://100.30.34.18/)
+  // Apunta a: https://isai.wildroid.space/api/auth
   const AUTH_URL = import.meta.env.VITE_API_URL_AUTH_ADMIN;
 
   const handleSubmit = async (e) => {
@@ -18,17 +18,15 @@ const FormularioLogin = () => {
     setLoading(true);
 
     try {
-      // 1. Corrección: Definir baseUrl asegurando que no tenga doble slash al final
+      // Aseguramos que la URL no tenga barra al final y le pegamos /login
       const baseUrl = AUTH_URL?.endsWith('/') ? AUTH_URL.slice(0, -1) : AUTH_URL;
-
-      // 2. Corrección: Enviar los datos mapeando 'usuarioInput' a lo que espera el backend
+      
       const response = await fetch(`${baseUrl}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // SOLICITUD: Solo enviamos username y password
         body: JSON.stringify({ 
-            // Enviamos el input en ambos campos para asegurar que el backend lo encuentre
             username: usuarioInput, 
-            identifier: usuarioInput,
             password: password 
         }) 
       });
@@ -36,14 +34,15 @@ const FormularioLogin = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // 3. Login Exitoso
+        // Guardamos el token
         localStorage.setItem("token", data.token);
-        // Guardamos datos del usuario si vienen en la respuesta
-        if(data.user) localStorage.setItem("user", JSON.stringify(data.user));
+        
+        // Guardamos usuario si existe, si no, creamos un objeto básico para que no rompa el app
+        const userData = data.user || { username: usuarioInput };
+        localStorage.setItem("user", JSON.stringify(userData));
         
         navigate("/graficas");
       } else {
-        // 4. Error de credenciales
         setError(data.message || "Credenciales incorrectas");
       }
     } catch (err) {

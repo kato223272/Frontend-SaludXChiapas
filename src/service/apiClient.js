@@ -1,6 +1,5 @@
     import { logoutUser, getToken } from './authService';
 
-// Apunta a Python: https://isai.wildroid.space/api/v1
 const DATA_URL = import.meta.env.VITE_API_DATA_URL; 
 
 export const authFetch = async (endpoint, options = {}) => {

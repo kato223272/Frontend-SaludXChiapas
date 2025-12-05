@@ -2,16 +2,14 @@ const AUTH_URL = import.meta.env.VITE_API_URL_AUTH_ADMIN;
 
 export const loginUser = async (identifier, password) => {
   try {
-
     const baseUrl = AUTH_URL.endsWith('/') ? AUTH_URL.slice(0, -1) : AUTH_URL;
     
     const response = await fetch(`${baseUrl}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-
+      // CORREGIDO: Solo username y password
       body: JSON.stringify({ 
           username: identifier, 
-          identifier: identifier, 
           password 
       }) 
     });
@@ -22,10 +20,9 @@ export const loginUser = async (identifier, password) => {
       throw new Error(data.error || 'Error al iniciar sesión');
     }
 
-    // Guardar token en el navegador
     if (data.token) {
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user || { username: identifier }));
     }
 
     return data;
